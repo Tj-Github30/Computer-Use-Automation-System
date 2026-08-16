@@ -1,0 +1,33 @@
+- table:
+  - rowgroup:
+    - row "CoreUnion Member Servicing — Terminal 04":
+      - cell "CoreUnion Member Servicing — Terminal 04"
+    - 'row "Session Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out Member Lookup Member ID 4004 Search System Notice Permission denied: your role cannot view this member record. A supervisor must sign in."':
+      - 'cell "Session Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out Member Lookup Member ID 4004 Search System Notice Permission denied: your role cannot view this member record. A supervisor must sign in."':
+        - table:
+          - rowgroup:
+            - row "Session":
+              - cell "Session"
+            - row "Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out":
+              - cell "Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out":
+                - text: Signed in as teller04 (teller)
+                - button "Signed in as Teller"
+                - button "Login as Supervisor"
+                - button "Sign out"
+        - table:
+          - rowgroup:
+            - row "Member Lookup":
+              - cell "Member Lookup"
+            - row "Member ID 4004 Search":
+              - cell "Member ID 4004 Search":
+                - text: Member ID
+                - textbox "Member ID":
+                  - /placeholder: e.g. 12345
+                  - text: "4004"
+                - button "Search"
+        - table:
+          - rowgroup:
+            - row "System Notice":
+              - cell "System Notice"
+            - 'row "Permission denied: your role cannot view this member record. A supervisor must sign in."':
+              - 'cell "Permission denied: your role cannot view this member record. A supervisor must sign in."'

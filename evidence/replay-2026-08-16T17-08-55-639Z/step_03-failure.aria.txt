@@ -1,0 +1,33 @@
+- table:
+  - rowgroup:
+    - row "CoreUnion Member Servicing — Terminal 04":
+      - cell "CoreUnion Member Servicing — Terminal 04"
+    - row "Session Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out Member Lookup Member ID 8008 Search System Notice Unexpected application error (ref TX-500). Contact the core team.":
+      - cell "Session Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out Member Lookup Member ID 8008 Search System Notice Unexpected application error (ref TX-500). Contact the core team.":
+        - table:
+          - rowgroup:
+            - row "Session":
+              - cell "Session"
+            - row "Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out":
+              - cell "Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out":
+                - text: Signed in as teller04 (teller)
+                - button "Signed in as Teller"
+                - button "Login as Supervisor"
+                - button "Sign out"
+        - table:
+          - rowgroup:
+            - row "Member Lookup":
+              - cell "Member Lookup"
+            - row "Member ID 8008 Search":
+              - cell "Member ID 8008 Search":
+                - text: Member ID
+                - textbox "Member ID":
+                  - /placeholder: e.g. 12345
+                  - text: "8008"
+                - button "Search"
+        - table:
+          - rowgroup:
+            - row "System Notice":
+              - cell "System Notice"
+            - row "Unexpected application error (ref TX-500). Contact the core team.":
+              - cell "Unexpected application error (ref TX-500). Contact the core team."

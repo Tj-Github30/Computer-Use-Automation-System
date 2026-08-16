@@ -1,0 +1,10 @@
+node_modules
+dist
+.env
+playwright-report
+test-results
+*.log
+DECISIONS.md
+REQUIREMENTS.md
+FLOW.md
+PLAN.md

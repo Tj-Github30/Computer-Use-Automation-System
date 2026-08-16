@@ -1,0 +1,97 @@
+{
+  "name": "open-sub-account",
+  "description": "Look up a member and open a new sub-account through to the confirmation screen.",
+  "appId": "coreunion-member-servicing",
+  "appVersion": "4.2",
+  "tenantId": "base",
+  "inputs": {
+    "memberId": {
+      "type": "string",
+      "required": true,
+      "description": "Member identifier as keyed by the operator.",
+      "example": "12345",
+      "pattern": "^[0-9]{1,10}$",
+      "sensitive": false
+    },
+    "productType": {
+      "type": "string",
+      "required": true,
+      "description": "Sub-account product: Money Market, Share Certificate, or Checking.",
+      "example": "Money Market",
+      "sensitive": false
+    },
+    "openingAmount": {
+      "type": "string",
+      "required": true,
+      "description": "Opening deposit as a positive dollar amount.",
+      "example": "250.00",
+      "pattern": "^[0-9]+(\\.[0-9]{1,2})?$",
+      "sensitive": false
+    }
+  },
+  "outputs": {
+    "confirmationNumber": {
+      "type": "string",
+      "description": "Confirmation number shown after the sub-account is opened.",
+      "sensitive": false
+    }
+  },
+  "successCheckpoint": {
+    "type": "text_present",
+    "value": "Confirmation Number",
+    "timeoutMs": 10000
+  },
+  "outcomes": [
+    {
+      "code": "MEMBER_NOT_FOUND",
+      "kind": "business",
+      "description": "No member exists for the supplied identifier.",
+      "detect": { "type": "text_present", "value": "MEMBER_NOT_FOUND" },
+      "escalate": false
+    },
+    {
+      "code": "VALIDATION_ERROR",
+      "kind": "business",
+      "description": "The application rejected the product type or opening amount.",
+      "detect": { "type": "text_present", "value": "Validation error:" },
+      "escalate": false
+    },
+    {
+      "code": "PERMISSION_DENIED",
+      "kind": "hard",
+      "description": "The operating role cannot complete this action.",
+      "detect": { "type": "text_present", "value": "Permission denied" },
+      "escalate": true
+    },
+    {
+      "code": "SESSION_EXPIRED",
+      "kind": "hard",
+      "description": "The terminal session ended.",
+      "detect": { "type": "text_present", "value": "Session expired" },
+      "escalate": true
+    },
+    {
+      "code": "APP_ERROR",
+      "kind": "hard",
+      "description": "The core system returned an internal error.",
+      "detect": { "type": "text_present", "value": "Unexpected application error" },
+      "escalate": true
+    },
+    {
+      "code": "UNEXPECTED_DIALOG",
+      "kind": "recoverable",
+      "description": "A review-flag dialog appeared and was dismissed.",
+      "detect": { "type": "dialog_opened", "value": "" },
+      "recovery": { "action": "dismiss_dialog", "maxAttempts": 2, "waitMs": 250 },
+      "escalate": false
+    },
+    {
+      "code": "TRANSIENT_LOAD_FAILURE",
+      "kind": "recoverable",
+      "description": "The step timed out on a slow load.",
+      "detect": { "type": "action_error", "value": "Timeout" },
+      "recovery": { "action": "wait_and_retry", "maxAttempts": 3, "waitMs": 1500 },
+      "escalate": false
+    }
+  ]
+}

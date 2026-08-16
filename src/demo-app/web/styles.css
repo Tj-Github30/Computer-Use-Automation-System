@@ -1,0 +1,82 @@
+body {
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 13px;
+  margin: 16px;
+  background: #dfe3ea;
+  color: #16233a;
+}
+
+.shell {
+  width: 780px;
+  border: 2px solid #7c8aa5;
+  background: #f4f6fa;
+}
+
+.banner {
+  background: #1f3864;
+  color: #fff;
+  font-weight: bold;
+  padding: 8px 10px;
+  letter-spacing: 0.4px;
+}
+
+.pane {
+  width: 100%;
+  margin: 10px 0;
+  border: 1px solid #9aa7bd;
+  background: #fff;
+}
+
+.pane-title {
+  background: #e2e8f2;
+  border-bottom: 1px solid #9aa7bd;
+  font-weight: bold;
+  padding: 5px 8px;
+}
+
+.pane td {
+  padding: 8px;
+}
+
+.detail td {
+  padding: 3px 12px 3px 0;
+  vertical-align: top;
+}
+
+label {
+  margin-right: 6px;
+}
+
+input {
+  border: 1px solid #7c8aa5;
+  padding: 3px 5px;
+  margin-right: 6px;
+}
+
+button {
+  border: 1px solid #4a5c7a;
+  background: #eaeef6;
+  padding: 3px 10px;
+  cursor: pointer;
+}
+
+#loadingState {
+  margin-left: 10px;
+  font-style: italic;
+}
+
+.field-row {
+  margin-bottom: 8px;
+}
+
+.field-row input {
+  width: 280px;
+}
+
+#openSubAccountBtn {
+  margin-top: 8px;
+}
+
+.hidden {
+  display: none;
+}

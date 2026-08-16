@@ -1,0 +1,42 @@
+- table:
+  - rowgroup:
+    - row "CoreUnion Member Servicing — Terminal 04":
+      - cell "CoreUnion Member Servicing — Terminal 04"
+    - 'row "Session Signed in as teller04 Signed in Member Lookup Member ID 1001 Search Lookup Result Member Name Ava Martin Savings Balance [REDACTED] Result Code: OK"':
+      - 'cell "Session Signed in as teller04 Signed in Member Lookup Member ID 1001 Search Lookup Result Member Name Ava Martin Savings Balance [REDACTED] Result Code: OK"':
+        - table:
+          - rowgroup:
+            - row "Session":
+              - cell "Session"
+            - row "Signed in as teller04 Signed in":
+              - cell "Signed in as teller04 Signed in":
+                - text: Signed in as teller04
+                - button "Signed in"
+        - table:
+          - rowgroup:
+            - row "Member Lookup":
+              - cell "Member Lookup"
+            - row "Member ID 1001 Search":
+              - cell "Member ID 1001 Search":
+                - text: Member ID
+                - textbox "Member ID":
+                  - /placeholder: e.g. 1001
+                  - text: "1001"
+                - button "Search"
+        - table:
+          - rowgroup:
+            - row "Lookup Result":
+              - cell "Lookup Result"
+            - 'row "Member Name Ava Martin Savings Balance [REDACTED] Result Code: OK"':
+              - 'cell "Member Name Ava Martin Savings Balance [REDACTED] Result Code: OK"':
+                - table:
+                  - rowgroup:
+                    - row "Member Name Ava Martin":
+                      - cell "Member Name"
+                      - cell "Ava Martin"
+                    - row "Savings Balance [REDACTED]":
+                      - cell "Savings Balance"
+                      - cell "[REDACTED]"
+                    - 'row "Result Code: OK"':
+                      - cell "Result Code:"
+                      - cell "OK"

@@ -1,0 +1,240 @@
+{
+  "schemaVersion": "2.0.0",
+  "capability": {
+    "id": "e44106dc-3721-4b6a-bf01-7ded2adb4fca",
+    "name": "member-balance-lookup",
+    "revision": 1,
+    "status": "draft",
+    "description": "Look up a member in the core servicing terminal and return their current savings balance."
+  },
+  "target": {
+    "surface": "web",
+    "entryUrl": "http://localhost:3000",
+    "appId": "coreunion-member-servicing",
+    "appVersion": "4.2",
+    "tenantId": "base",
+    "allowedDomains": [
+      "localhost",
+      "127.0.0.1"
+    ],
+    "allowedPathPrefixes": [
+      "/"
+    ]
+  },
+  "inputs": {
+    "memberId": {
+      "type": "string",
+      "required": true,
+      "description": "Member identifier as keyed by the operator.",
+      "example": "1001",
+      "pattern": "^[0-9]{1,10}$",
+      "sensitive": false
+    }
+  },
+  "outputs": {
+    "savingsBalance": {
+      "type": "string",
+      "description": "Current savings balance as displayed on the member record.",
+      "sensitive": true
+    }
+  },
+  "successCheckpoint": {
+    "type": "text_present",
+    "value": "Result Code:",
+    "timeoutMs": 10000
+  },
+  "outcomes": [
+    {
+      "code": "MEMBER_NOT_FOUND",
+      "kind": "business",
+      "description": "No member exists for the supplied identifier.",
+      "detect": {
+        "type": "text_present",
+        "value": "MEMBER_NOT_FOUND"
+      },
+      "escalate": false
+    },
+    {
+      "code": "VALIDATION_ERROR",
+      "kind": "business",
+      "description": "The application rejected the supplied member identifier.",
+      "detect": {
+        "type": "text_present",
+        "value": "Validation error:"
+      },
+      "escalate": false
+    },
+    {
+      "code": "PERMISSION_DENIED",
+      "kind": "hard",
+      "description": "The operating role is not permitted to view this member record.",
+      "detect": {
+        "type": "text_present",
+        "value": "Permission denied"
+      },
+      "escalate": true
+    },
+    {
+      "code": "SESSION_EXPIRED",
+      "kind": "hard",
+      "description": "The terminal session ended and automation cannot re-authenticate.",
+      "detect": {
+        "type": "text_present",
+        "value": "Session expired"
+      },
+      "escalate": true
+    },
+    {
+      "code": "APP_ERROR",
+      "kind": "hard",
+      "description": "The core system returned an internal error.",
+      "detect": {
+        "type": "text_present",
+        "value": "Unexpected application error"
+      },
+      "escalate": true
+    },
+    {
+      "code": "UNEXPECTED_DIALOG",
+      "kind": "recoverable",
+      "description": "A review-flag dialog appeared over the record and was dismissed.",
+      "detect": {
+        "type": "dialog_opened",
+        "value": ""
+      },
+      "recovery": {
+        "action": "dismiss_dialog",
+        "maxAttempts": 2,
+        "waitMs": 250
+      },
+      "escalate": false
+    },
+    {
+      "code": "TRANSIENT_LOAD_FAILURE",
+      "kind": "recoverable",
+      "description": "The record pane was still loading when the step ran.",
+      "detect": {
+        "type": "action_error",
+        "value": "Timeout"
+      },
+      "recovery": {
+        "action": "wait_and_retry",
+        "maxAttempts": 3,
+        "waitMs": 1500
+      },
+      "escalate": false
+    }
+  ],
+  "steps": [
+    {
+      "id": "step_01",
+      "action": "click",
+      "target": {
+        "description": "Login as Teller button",
+        "primary": {
+          "strategy": "role",
+          "value": "Login as Teller",
+          "role": "button"
+        },
+        "fallbacks": [
+          {
+            "strategy": "text",
+            "value": "Login as Teller"
+          }
+        ],
+        "robustness": "Uses the standard button role and text label which is highly stable."
+      },
+      "intent": "Sign in to the terminal by clicking the 'Login as Teller' button.",
+      "risk": "safe",
+      "optional": false,
+      "timeoutMs": 10000
+    },
+    {
+      "id": "step_02",
+      "action": "type",
+      "target": {
+        "description": "Member ID input field",
+        "primary": {
+          "strategy": "label",
+          "value": "Member ID",
+          "role": "textbox"
+        },
+        "fallbacks": [
+          {
+            "strategy": "placeholder",
+            "value": "e.g. 1001",
+            "role": "textbox"
+          },
+          {
+            "strategy": "xpath",
+            "value": "//input[@placeholder='e.g. 1001']",
+            "role": "textbox"
+          }
+        ],
+        "robustness": "Uses standard label and placeholder for the member ID input field"
+      },
+      "intent": "Enter the member ID into the search field to look up the member.",
+      "risk": "risky",
+      "optional": false,
+      "timeoutMs": 10000,
+      "valueTemplate": "{{memberId}}"
+    },
+    {
+      "id": "step_03",
+      "action": "click",
+      "target": {
+        "description": "Search button",
+        "primary": {
+          "strategy": "role",
+          "value": "Search",
+          "role": "button"
+        },
+        "fallbacks": [
+          {
+            "strategy": "text",
+            "value": "Search"
+          },
+          {
+            "strategy": "xpath",
+            "value": "//button[text()='Search']"
+          }
+        ],
+        "robustness": "Standard button with text 'Search' inside the Member Lookup section."
+      },
+      "intent": "Click the Search button to look up the member with the entered ID.",
+      "risk": "safe",
+      "optional": false,
+      "timeoutMs": 10000
+    },
+    {
+      "id": "step_04",
+      "action": "extract_text",
+      "target": {
+        "description": "Savings Balance value cell",
+        "primary": {
+          "strategy": "xpath",
+          "value": "//tr[td[contains(text(), 'Savings Balance')]]/td[2]"
+        },
+        "fallbacks": [
+          {
+            "strategy": "xpath",
+            "value": "//td[preceding-sibling::td[contains(text(), 'Savings Balance')]]"
+          }
+        ],
+        "robustness": "Locates the second cell in the row containing 'Savings Balance', which works regardless of the actual balance value."
+      },
+      "outputKey": "savingsBalance",
+      "intent": "Extract the savings balance from the cell next to the 'Savings Balance' label.",
+      "risk": "safe",
+      "optional": false,
+      "timeoutMs": 10000
+    }
+  ],
+  "provenance": {
+    "createdAt": "2026-08-15T20:05:04.898Z",
+    "createdBy": "discovery-loop",
+    "goal": "Sign in to the terminal, look up the member with the supplied member ID, and read their current savings balance",
+    "model": "gemini-3.5-flash",
+    "discoveryRunId": "discovery-2026-08-15T19-56-30-357Z"
+  }
+}

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CoreUnion Member Servicing</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <table class="shell" cellspacing="0">
+      <tr>
+        <td class="banner" id="banner">CoreUnion Member Servicing &mdash; Terminal 04</td>
+      </tr>
+      <tr>
+        <td>
+          <table id="interstitialPanel" class="pane hidden" cellspacing="0">
+            <tr>
+              <td class="pane-title">Compliance Notice</td>
+            </tr>
+            <tr>
+              <td>
+                <span>Member data access is monitored under WCU policy 11.4.</span>
+                <button id="acknowledgeBtn" type="button">Continue</button>
+              </td>
+            </tr>
+          </table>
+
+          <table class="pane" cellspacing="0">
+            <tr>
+              <td class="pane-title">Session</td>
+            </tr>
+            <tr>
+              <td>
+                <span id="sessionState">Not signed in</span>
+                <button id="loginBtn" type="button">Login as Teller</button>
+                <button id="supervisorBtn" type="button">Login as Supervisor</button>
+                <button id="signOutBtn" type="button">Sign out</button>
+              </td>
+            </tr>
+          </table>
+
+          <table class="pane" cellspacing="0">
+            <tr>
+              <td class="pane-title">Member Lookup</td>
+            </tr>
+            <tr>
+              <td>
+                <label for="memberIdInput">Member ID</label>
+                <input id="memberIdInput" type="text" placeholder="e.g. 12345" />
+                <button id="searchBtn" type="button">Search</button>
+                <span id="loadingState" class="hidden">Loading&hellip;</span>
+              </td>
+            </tr>
+          </table>
+
+          <table id="resultPanel" class="pane hidden" cellspacing="0">
+            <tr>
+              <td class="pane-title">Lookup Result</td>
+            </tr>
+            <tr>
+              <td>
+                <table class="detail" cellspacing="0">
+                  <tr>
+                    <td>Member Name</td>
+                    <td><span id="memberName"></span></td>
+                  </tr>
+                  <tr>
+                    <td>Status</td>
+                    <td><span id="memberStatus"></span></td>
+                  </tr>
+                  <tr>
+                    <td>Savings Balance</td>
+                    <td><span id="savingsBalance"></span></td>
+                  </tr>
+                  <tr>
+                    <td>Checking Balance</td>
+                    <td><span id="checkingBalance"></span></td>
+                  </tr>
+                  <tr>
+                    <td>Result Code:</td>
+                    <td><span id="resultCode"></span></td>
+                  </tr>
+                </table>
+                <button id="openSubAccountBtn" type="button" class="hidden">Open New Sub-Account</button>
+              </td>
+            </tr>
+          </table>
+
+          <table id="subAccountPanel" class="pane hidden" cellspacing="0">
+            <tr>
+              <td class="pane-title">Open New Sub-Account</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="field-row">
+                  <label for="productTypeInput">Product Type</label>
+                  <input id="productTypeInput" type="text" placeholder="Money Market, Share Certificate, or Checking" />
+                </div>
+                <div class="field-row">
+                  <label for="openingAmountInput">Opening Amount</label>
+                  <input id="openingAmountInput" type="text" placeholder="e.g. 250.00" />
+                </div>
+                <button id="submitSubAccountBtn" type="button">Submit Application</button>
+              </td>
+            </tr>
+          </table>
+
+          <table id="confirmationPanel" class="pane hidden" cellspacing="0">
+            <tr>
+              <td class="pane-title">Confirmation</td>
+            </tr>
+            <tr>
+              <td>
+                <table class="detail" cellspacing="0">
+                  <tr>
+                    <td>Confirmation Number</td>
+                    <td><span id="confirmationNumber"></span></td>
+                  </tr>
+                  <tr>
+                    <td>Product</td>
+                    <td><span id="confirmedProduct"></span></td>
+                  </tr>
+                  <tr>
+                    <td>Opening Amount</td>
+                    <td><span id="confirmedAmount"></span></td>
+                  </tr>
+                  <tr>
+                    <td>Status</td>
+                    <td>Sub-account opened. Print this screen for the member file.</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+          <table id="noticePanel" class="pane hidden" cellspacing="0">
+            <tr>
+              <td class="pane-title">System Notice</td>
+            </tr>
+            <tr>
+              <td><span id="noticeText"></span></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    <script src="/app.js"></script>
+  </body>
+</html>

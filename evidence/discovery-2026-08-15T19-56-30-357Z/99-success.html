@@ -1,0 +1,83 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoreUnion Member Servicing</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <!--
+      Deliberately legacy-flavoured: table layout, no data-testid attributes,
+      values rendered into unlabelled spans. Accessible names exist only where a
+      real operator would see them (buttons, field labels).
+    -->
+    <table class="shell" cellspacing="0">
+      <tbody><tr>
+        <td class="banner">CoreUnion Member Servicing — Terminal 04</td>
+      </tr>
+      <tr>
+        <td>
+          <table class="pane" cellspacing="0">
+            <tbody><tr>
+              <td class="pane-title">Session</td>
+            </tr>
+            <tr>
+              <td>
+                <span id="sessionState">Signed in as teller04</span>
+                <button id="loginBtn" type="button">Signed in</button>
+              </td>
+            </tr>
+          </tbody></table>
+
+          <table class="pane" cellspacing="0">
+            <tbody><tr>
+              <td class="pane-title">Member Lookup</td>
+            </tr>
+            <tr>
+              <td>
+                <label for="memberIdInput">Member ID</label>
+                <input id="memberIdInput" type="text" placeholder="e.g. 1001" style="">
+                <button id="searchBtn" type="button">Search</button>
+                <span id="loadingState" class="hidden">Loading…</span>
+              </td>
+            </tr>
+          </tbody></table>
+
+          <table id="resultPanel" class="pane" cellspacing="0">
+            <tbody><tr>
+              <td class="pane-title">Lookup Result</td>
+            </tr>
+            <tr>
+              <td>
+                <table class="detail" cellspacing="0">
+                  <tbody><tr>
+                    <td>Member Name</td>
+                    <td><span id="memberName">Ava Martin</span></td>
+                  </tr>
+                  <tr>
+                    <td>Savings Balance</td>
+                    <td><span id="savingsBalance">[REDACTED]</span></td>
+                  </tr>
+                  <tr>
+                    <td>Result Code:</td>
+                    <td><span id="resultCode">OK</span></td>
+                  </tr>
+                </tbody></table>
+              </td>
+            </tr>
+          </tbody></table>
+
+          <table id="noticePanel" class="pane hidden" cellspacing="0">
+            <tbody><tr>
+              <td class="pane-title">System Notice</td>
+            </tr>
+            <tr>
+              <td><span id="noticeText"></span></td>
+            </tr>
+          </tbody></table>
+        </td>
+      </tr>
+    </tbody></table>
+    <script src="/app.js"></script>
+  
+
+</body></html>

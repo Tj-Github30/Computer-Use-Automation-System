@@ -1,0 +1,16 @@
+{"at":"2026-08-16T17:08:56.562Z","type":"run_started","mode":"replay","capabilityId":"67708c60-7157-4f4a-a8c2-a8da27399bce","capabilityName":"open-sub-account","revision":1,"status":"draft","inputs":{"memberId":"12345","productType":"Money Market","openingAmount":"250.00"},"controlOwner":"automation"}
+{"at":"2026-08-16T17:08:56.626Z","type":"step_completed","stepId":"step_01","action":"click","intent":"Authenticate into the teller session before searching.","url":"http://localhost:3000/","attempt":1}
+{"at":"2026-08-16T17:08:56.626Z","type":"risky_step_flagged","stepId":"step_02","intent":"Enter the member identifier supplied by the caller."}
+{"at":"2026-08-16T17:08:56.653Z","type":"step_completed","stepId":"step_02","action":"type","intent":"Enter the member identifier supplied by the caller.","url":"http://localhost:3000/","attempt":1}
+{"at":"2026-08-16T17:08:56.686Z","type":"step_completed","stepId":"step_03","action":"click","intent":"Run the member lookup.","url":"http://localhost:3000/","attempt":1}
+{"at":"2026-08-16T17:08:56.687Z","type":"risky_step_flagged","stepId":"step_04","intent":"Open the new sub-account form for this member."}
+{"at":"2026-08-16T17:08:56.719Z","type":"step_completed","stepId":"step_04","action":"click","intent":"Open the new sub-account form for this member.","url":"http://localhost:3000/","attempt":1}
+{"at":"2026-08-16T17:08:56.719Z","type":"risky_step_flagged","stepId":"step_05","intent":"Enter the product type supplied by the caller."}
+{"at":"2026-08-16T17:08:56.724Z","type":"step_completed","stepId":"step_05","action":"type","intent":"Enter the product type supplied by the caller.","url":"http://localhost:3000/","attempt":1}
+{"at":"2026-08-16T17:08:56.725Z","type":"risky_step_flagged","stepId":"step_06","intent":"Enter the opening amount supplied by the caller."}
+{"at":"2026-08-16T17:08:56.729Z","type":"step_completed","stepId":"step_06","action":"type","intent":"Enter the opening amount supplied by the caller.","url":"http://localhost:3000/","attempt":1}
+{"at":"2026-08-16T17:08:56.730Z","type":"risky_step_flagged","stepId":"step_07","intent":"Submit the sub-account application."}
+{"at":"2026-08-16T17:08:56.769Z","type":"step_completed","stepId":"step_07","action":"click","intent":"Submit the sub-account application.","url":"http://localhost:3000/","attempt":1}
+{"at":"2026-08-16T17:08:56.771Z","type":"output_captured","stepId":"step_08","outputKey":"confirmationNumber","value":"CU-12345-136765"}
+{"at":"2026-08-16T17:08:56.774Z","type":"step_completed","stepId":"step_08","action":"extract_text","intent":"Read the confirmation number the caller needs back.","url":"http://localhost:3000/","attempt":1}
+{"at":"2026-08-16T17:08:56.811Z","type":"run_completed","result":{"status":"success","capability":{"id":"67708c60-7157-4f4a-a8c2-a8da27399bce","name":"open-sub-account","revision":1},"outputs":{"confirmationNumber":"CU-12345-136765"},"recoveries":[],"controlOwnerAtEnd":"automation","startedAt":"2026-08-16T17:08:56.431Z","finishedAt":"2026-08-16T17:08:56.811Z","durationMs":380,"evidenceDir":"/Users/tejaswinisrivastava/Desktop/Coding Tests/Interface AI/evidence/replay-2026-08-16T17-08-56-430Z"}}

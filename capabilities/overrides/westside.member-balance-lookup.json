@@ -1,0 +1,42 @@
+{
+  "overrideId": "westside-member-balance-lookup-v1",
+  "description": "Westside Credit Union runs the same CoreUnion servicing product with a local compliance interstitial and a relabelled search control. The base recording is reused; only those two deltas are patched.",
+  "appId": "coreunion-member-servicing",
+  "appVersion": "4.2",
+  "tenantId": "westside",
+  "target": {
+    "entryUrl": "http://localhost:3000/?tenant=westside"
+  },
+  "insertSteps": [
+    {
+      "before": "step_01",
+      "step": {
+        "id": "westside_acknowledge",
+        "action": "click",
+        "target": {
+          "description": "Continue button on the tenant compliance notice",
+          "primary": { "strategy": "role", "role": "button", "value": "Continue" },
+          "fallbacks": [{ "strategy": "text", "value": "Continue" }],
+          "robustness": "The notice is a tenant-specific interstitial; the control is identified by the operator-facing label, not by markup."
+        },
+        "intent": "Dismiss Westside's local compliance notice so the workspace is usable.",
+        "risk": "safe",
+        "optional": false,
+        "timeoutMs": 10000
+      }
+    }
+  ],
+  "stepPatches": {
+    "step_03": {
+      "target": {
+        "description": "Find Member button (Westside label for the same search control)",
+        "primary": { "strategy": "role", "role": "button", "value": "Find Member" },
+        "fallbacks": [
+          { "strategy": "text", "value": "Find Member" },
+          { "strategy": "role", "role": "button", "value": "Search" }
+        ],
+        "robustness": "Westside rebrands the control; the fallback to the vendor label absorbs a revert."
+      }
+    }
+  }
+}

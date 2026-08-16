@@ -1,0 +1,71 @@
+- table:
+  - rowgroup:
+    - row "CoreUnion Member Servicing — Terminal 04":
+      - cell "CoreUnion Member Servicing — Terminal 04"
+    - 'row "Session Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out Member Lookup Member ID 12345 Search Lookup Result Member Name Jordan Hale Status Active Savings Balance $18,640.55 Checking Balance $2,104.00 Result Code: OK Open New Sub-Account Confirmation Confirmation Number CU-12345-121849 Product Money Market Opening Amount $250.00 Status Sub-account opened. Print this screen for the member file."':
+      - 'cell "Session Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out Member Lookup Member ID 12345 Search Lookup Result Member Name Jordan Hale Status Active Savings Balance $18,640.55 Checking Balance $2,104.00 Result Code: OK Open New Sub-Account Confirmation Confirmation Number CU-12345-121849 Product Money Market Opening Amount $250.00 Status Sub-account opened. Print this screen for the member file."':
+        - table:
+          - rowgroup:
+            - row "Session":
+              - cell "Session"
+            - row "Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out":
+              - cell "Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out":
+                - text: Signed in as teller04 (teller)
+                - button "Signed in as Teller"
+                - button "Login as Supervisor"
+                - button "Sign out"
+        - table:
+          - rowgroup:
+            - row "Member Lookup":
+              - cell "Member Lookup"
+            - row "Member ID 12345 Search":
+              - cell "Member ID 12345 Search":
+                - text: Member ID
+                - textbox "Member ID":
+                  - /placeholder: e.g. 12345
+                  - text: "12345"
+                - button "Search"
+        - table:
+          - rowgroup:
+            - row "Lookup Result":
+              - cell "Lookup Result"
+            - 'row "Member Name Jordan Hale Status Active Savings Balance $18,640.55 Checking Balance $2,104.00 Result Code: OK Open New Sub-Account"':
+              - 'cell "Member Name Jordan Hale Status Active Savings Balance $18,640.55 Checking Balance $2,104.00 Result Code: OK Open New Sub-Account"':
+                - table:
+                  - rowgroup:
+                    - row "Member Name Jordan Hale":
+                      - cell "Member Name"
+                      - cell "Jordan Hale"
+                    - row "Status Active":
+                      - cell "Status"
+                      - cell "Active"
+                    - row "Savings Balance $18,640.55":
+                      - cell "Savings Balance"
+                      - cell "$18,640.55"
+                    - row "Checking Balance $2,104.00":
+                      - cell "Checking Balance"
+                      - cell "$2,104.00"
+                    - 'row "Result Code: OK"':
+                      - cell "Result Code:"
+                      - cell "OK"
+                - button "Open New Sub-Account"
+        - table:
+          - rowgroup:
+            - row "Confirmation":
+              - cell "Confirmation"
+            - row "Confirmation Number CU-12345-121849 Product Money Market Opening Amount $250.00 Status Sub-account opened. Print this screen for the member file.":
+              - cell "Confirmation Number CU-12345-121849 Product Money Market Opening Amount $250.00 Status Sub-account opened. Print this screen for the member file.":
+                - table:
+                  - rowgroup:
+                    - row "Confirmation Number CU-12345-121849":
+                      - cell "Confirmation Number"
+                      - cell "CU-12345-121849"
+                    - row "Product Money Market":
+                      - cell "Product"
+                      - cell "Money Market"
+                    - row "Opening Amount $250.00":
+                      - cell "Opening Amount"
+                      - cell "$250.00"
+                    - row "Status Sub-account opened. Print this screen for the member file.":
+                      - cell "Status"
+                      - cell "Sub-account opened. Print this screen for the member file."

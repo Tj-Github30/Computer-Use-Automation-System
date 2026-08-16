@@ -1,0 +1,344 @@
+{
+  "schemaVersion": "2.0.0",
+  "capability": {
+    "id": "67708c60-7157-4f4a-a8c2-a8da27399bce",
+    "name": "open-sub-account",
+    "revision": 1,
+    "status": "draft",
+    "description": "Look up a member and open a new sub-account through to the confirmation screen."
+  },
+  "target": {
+    "surface": "web",
+    "entryUrl": "http://localhost:3000",
+    "appId": "coreunion-member-servicing",
+    "appVersion": "4.2",
+    "tenantId": "base",
+    "allowedDomains": [
+      "localhost",
+      "127.0.0.1"
+    ],
+    "allowedPathPrefixes": [
+      "/"
+    ]
+  },
+  "inputs": {
+    "memberId": {
+      "type": "string",
+      "required": true,
+      "description": "Member identifier as keyed by the operator.",
+      "example": "12345",
+      "pattern": "^[0-9]{1,10}$",
+      "sensitive": false
+    },
+    "productType": {
+      "type": "string",
+      "required": true,
+      "description": "Sub-account product: Money Market, Share Certificate, or Checking.",
+      "example": "Money Market",
+      "sensitive": false
+    },
+    "openingAmount": {
+      "type": "string",
+      "required": true,
+      "description": "Opening deposit as a positive dollar amount.",
+      "example": "250.00",
+      "pattern": "^[0-9]+(\\.[0-9]{1,2})?$",
+      "sensitive": false
+    }
+  },
+  "outputs": {
+    "confirmationNumber": {
+      "type": "string",
+      "description": "Confirmation number shown after the sub-account is opened.",
+      "sensitive": false
+    }
+  },
+  "successCheckpoint": {
+    "type": "text_present",
+    "value": "Confirmation Number",
+    "timeoutMs": 10000
+  },
+  "outcomes": [
+    {
+      "code": "MEMBER_NOT_FOUND",
+      "kind": "business",
+      "description": "No member exists for the supplied identifier.",
+      "detect": {
+        "type": "text_present",
+        "value": "MEMBER_NOT_FOUND"
+      },
+      "escalate": false
+    },
+    {
+      "code": "VALIDATION_ERROR",
+      "kind": "business",
+      "description": "The application rejected the product type or opening amount.",
+      "detect": {
+        "type": "text_present",
+        "value": "Validation error:"
+      },
+      "escalate": false
+    },
+    {
+      "code": "PERMISSION_DENIED",
+      "kind": "hard",
+      "description": "The operating role cannot complete this action.",
+      "detect": {
+        "type": "text_present",
+        "value": "Permission denied"
+      },
+      "escalate": true
+    },
+    {
+      "code": "SESSION_EXPIRED",
+      "kind": "hard",
+      "description": "The terminal session ended.",
+      "detect": {
+        "type": "text_present",
+        "value": "Session expired"
+      },
+      "escalate": true
+    },
+    {
+      "code": "APP_ERROR",
+      "kind": "hard",
+      "description": "The core system returned an internal error.",
+      "detect": {
+        "type": "text_present",
+        "value": "Unexpected application error"
+      },
+      "escalate": true
+    },
+    {
+      "code": "UNEXPECTED_DIALOG",
+      "kind": "recoverable",
+      "description": "A review-flag dialog appeared and was dismissed.",
+      "detect": {
+        "type": "dialog_opened",
+        "value": ""
+      },
+      "recovery": {
+        "action": "dismiss_dialog",
+        "maxAttempts": 2,
+        "waitMs": 250
+      },
+      "escalate": false
+    },
+    {
+      "code": "TRANSIENT_LOAD_FAILURE",
+      "kind": "recoverable",
+      "description": "The step timed out on a slow load.",
+      "detect": {
+        "type": "action_error",
+        "value": "Timeout"
+      },
+      "recovery": {
+        "action": "wait_and_retry",
+        "maxAttempts": 3,
+        "waitMs": 1500
+      },
+      "escalate": false
+    }
+  ],
+  "steps": [
+    {
+      "id": "step_01",
+      "action": "click",
+      "target": {
+        "description": "Login as Teller button",
+        "primary": {
+          "strategy": "role",
+          "role": "button",
+          "value": "Login as Teller"
+        },
+        "fallbacks": [
+          {
+            "strategy": "css",
+            "value": "#loginBtn"
+          }
+        ],
+        "robustness": "Button text is operator-facing; id is a fallback only."
+      },
+      "intent": "Authenticate into the teller session before searching.",
+      "risk": "safe",
+      "optional": false,
+      "timeoutMs": 10000
+    },
+    {
+      "id": "step_02",
+      "action": "type",
+      "target": {
+        "description": "Member ID field",
+        "primary": {
+          "strategy": "label",
+          "value": "Member ID"
+        },
+        "fallbacks": [
+          {
+            "strategy": "placeholder",
+            "value": "e.g. 12345"
+          },
+          {
+            "strategy": "css",
+            "value": "#memberIdInput"
+          }
+        ],
+        "robustness": "Bound to the visible field label rather than markup position."
+      },
+      "intent": "Enter the member identifier supplied by the caller.",
+      "risk": "risky",
+      "optional": false,
+      "timeoutMs": 10000,
+      "valueTemplate": "{{memberId}}"
+    },
+    {
+      "id": "step_03",
+      "action": "click",
+      "target": {
+        "description": "Search button",
+        "primary": {
+          "strategy": "role",
+          "role": "button",
+          "value": "Search"
+        },
+        "fallbacks": [
+          {
+            "strategy": "text",
+            "value": "Search"
+          },
+          {
+            "strategy": "css",
+            "value": "#searchBtn"
+          }
+        ],
+        "robustness": "Role plus accessible name; resilient to layout changes."
+      },
+      "intent": "Run the member lookup.",
+      "risk": "safe",
+      "optional": false,
+      "timeoutMs": 10000
+    },
+    {
+      "id": "step_04",
+      "action": "click",
+      "target": {
+        "description": "Open New Sub-Account button",
+        "primary": {
+          "strategy": "role",
+          "role": "button",
+          "value": "Open New Sub-Account"
+        },
+        "fallbacks": [
+          {
+            "strategy": "css",
+            "value": "#openSubAccountBtn"
+          }
+        ],
+        "robustness": "Role plus the operator-facing label on the member record."
+      },
+      "intent": "Open the new sub-account form for this member.",
+      "risk": "risky",
+      "optional": false,
+      "timeoutMs": 10000
+    },
+    {
+      "id": "step_05",
+      "action": "type",
+      "target": {
+        "description": "Product Type field",
+        "primary": {
+          "strategy": "label",
+          "value": "Product Type"
+        },
+        "fallbacks": [
+          {
+            "strategy": "css",
+            "value": "#productTypeInput"
+          }
+        ],
+        "robustness": "Bound to the visible field label."
+      },
+      "intent": "Enter the product type supplied by the caller.",
+      "risk": "risky",
+      "optional": false,
+      "timeoutMs": 10000,
+      "valueTemplate": "{{productType}}"
+    },
+    {
+      "id": "step_06",
+      "action": "type",
+      "target": {
+        "description": "Opening Amount field",
+        "primary": {
+          "strategy": "label",
+          "value": "Opening Amount"
+        },
+        "fallbacks": [
+          {
+            "strategy": "css",
+            "value": "#openingAmountInput"
+          }
+        ],
+        "robustness": "Bound to the visible field label."
+      },
+      "intent": "Enter the opening amount supplied by the caller.",
+      "risk": "risky",
+      "optional": false,
+      "timeoutMs": 10000,
+      "valueTemplate": "{{openingAmount}}"
+    },
+    {
+      "id": "step_07",
+      "action": "click",
+      "target": {
+        "description": "Submit Application button",
+        "primary": {
+          "strategy": "role",
+          "role": "button",
+          "value": "Submit Application"
+        },
+        "fallbacks": [
+          {
+            "strategy": "css",
+            "value": "#submitSubAccountBtn"
+          }
+        ],
+        "robustness": "Role plus accessible name on the application form."
+      },
+      "intent": "Submit the sub-account application.",
+      "risk": "risky",
+      "optional": false,
+      "timeoutMs": 10000
+    },
+    {
+      "id": "step_08",
+      "action": "extract_text",
+      "target": {
+        "description": "Confirmation Number value",
+        "primary": {
+          "strategy": "css",
+          "value": "#confirmationNumber"
+        },
+        "fallbacks": [
+          {
+            "strategy": "xpath",
+            "value": "//*[@id='confirmationNumber']"
+          }
+        ],
+        "robustness": "Value node has no accessible name; addressed by id with xpath fallback."
+      },
+      "outputKey": "confirmationNumber",
+      "intent": "Read the confirmation number the caller needs back.",
+      "risk": "safe",
+      "optional": false,
+      "timeoutMs": 10000
+    }
+  ],
+  "provenance": {
+    "createdAt": "2026-08-16T17:08:41.884Z",
+    "createdBy": "discovery-loop",
+    "goal": "Open a new sub-account for this member and reach the confirmation screen",
+    "model": "mock-planner-v2",
+    "discoveryRunId": "discovery-2026-08-16T17-08-41-265Z"
+  }
+}

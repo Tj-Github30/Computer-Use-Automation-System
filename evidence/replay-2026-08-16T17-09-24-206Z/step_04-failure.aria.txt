@@ -1,0 +1,33 @@
+- table:
+  - rowgroup:
+    - row "CoreUnion Member Servicing — Terminal 04":
+      - cell "CoreUnion Member Servicing — Terminal 04"
+    - 'row "Session Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out Member Lookup Member ID 9009 Search System Notice Permission denied: closed memberships cannot open a new sub-account."':
+      - 'cell "Session Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out Member Lookup Member ID 9009 Search System Notice Permission denied: closed memberships cannot open a new sub-account."':
+        - table:
+          - rowgroup:
+            - row "Session":
+              - cell "Session"
+            - row "Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out":
+              - cell "Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out":
+                - text: Signed in as teller04 (teller)
+                - button "Signed in as Teller"
+                - button "Login as Supervisor"
+                - button "Sign out"
+        - table:
+          - rowgroup:
+            - row "Member Lookup":
+              - cell "Member Lookup"
+            - row "Member ID 9009 Search":
+              - cell "Member ID 9009 Search":
+                - text: Member ID
+                - textbox "Member ID":
+                  - /placeholder: e.g. 12345
+                  - text: "9009"
+                - button "Search"
+        - table:
+          - rowgroup:
+            - row "System Notice":
+              - cell "System Notice"
+            - 'row "Permission denied: closed memberships cannot open a new sub-account."':
+              - 'cell "Permission denied: closed memberships cannot open a new sub-account."'
