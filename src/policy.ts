@@ -56,6 +56,15 @@ export class PolicyViolationError extends Error {
   }
 }
 
+export function urlAllowed(rawUrl: string, policy: PolicyConfig): boolean {
+  try {
+    assertUrlAllowed(rawUrl, policy);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function assertUrlAllowed(rawUrl: string, policy: PolicyConfig): void {
   let url: URL;
   try {

@@ -2,6 +2,7 @@ import path from "node:path";
 import { writeFile } from "node:fs/promises";
 import { chromium, type Browser, type Locator, type Page } from "playwright";
 import { ensureDir } from "./fs-utils.js";
+import { assertUrlAllowed, urlAllowed, PolicyViolationError, type PolicyConfig } from "./policy.js";
 import { describeCandidate, TargetNotFoundError, type Surface } from "./surface.js";
 import type { DialogRecord, ElementTarget, LocatorCandidate, Observation } from "./types.js";
 
@@ -9,6 +10,7 @@ const MIN_CANDIDATE_TIMEOUT_MS = 1500;
 
 export type BrowserSurfaceOptions = {
   headless: boolean;
+  policy: PolicyConfig;
   /** Applied to every persisted snapshot so evidence never carries raw values. */
   scrubText?: (text: string) => string;
   /**
@@ -22,6 +24,9 @@ export class BrowserSurface implements Surface {
   private browser?: Browser;
   private page?: Page;
   private dialogs: DialogRecord[] = [];
+  /** Set when a main-frame navigation is aborted by the allowlist guard. */
+  private blockedNavigation?: string;
+  private lastAllowedUrl?: string;
 
   constructor(private readonly options: BrowserSurfaceOptions) {}
 
@@ -45,6 +50,7 @@ export class BrowserSurface implements Surface {
     });
     const context = await this.browser.newContext();
     this.page = await context.newPage();
+    await this.installNavigationGuard();
 
     // Legacy apps throw modal dialogs at operators. Record every one so replay
     // can treat it as a declared condition instead of silently proceeding.
@@ -65,12 +71,62 @@ export class BrowserSurface implements Surface {
     this.page = undefined;
   }
 
+  /**
+   * Abort disallowed top-level navigations *before* they complete.
+   * Only intercepts off-allowlist hosts so same-origin scripts/CSS are untouched.
+   */
+  private async installNavigationGuard(): Promise<void> {
+    const page = this.requirePage();
+    const escaped = this.options.policy.allowedDomains
+      .map((domain) => domain.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+      .join("|");
+    const offAllowlist = new RegExp(`^https?:\\/\\/(?!(${escaped})(:\\d+)?(\\/|$)).+`, "i");
+    await page.route(offAllowlist, async (route) => {
+      const request = route.request();
+      if (request.isNavigationRequest() && request.frame() === page.mainFrame()) {
+        this.blockedNavigation = request.url();
+        await route.abort("blockedbyclient");
+        return;
+      }
+      await route.abort("blockedbyclient");
+    });
+  }
+
+  private async restoreAllowedUrl(): Promise<void> {
+    const page = this.requirePage();
+    if (!this.lastAllowedUrl || urlAllowed(page.url(), this.options.policy)) {
+      return;
+    }
+    await page.goto(this.lastAllowedUrl, { waitUntil: "domcontentloaded" }).catch(() => undefined);
+  }
+
+  private async settleAndEnforceAllowlist(): Promise<void> {
+    const page = this.requirePage();
+    const deadline = Date.now() + 400;
+    while (Date.now() < deadline && !this.blockedNavigation) {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+    if (this.blockedNavigation) {
+      const blocked = this.blockedNavigation;
+      this.blockedNavigation = undefined;
+      await this.restoreAllowedUrl();
+      throw new PolicyViolationError(`Top-level navigation blocked by policy: ${blocked}`);
+    }
+    assertUrlAllowed(page.url(), this.options.policy);
+    this.lastAllowedUrl = page.url();
+  }
+
   async goto(url: string): Promise<void> {
+    assertUrlAllowed(url, this.options.policy);
+    this.blockedNavigation = undefined;
     await this.requirePage().goto(url, { waitUntil: "load" });
+    await this.settleAndEnforceAllowlist();
   }
 
   async reload(): Promise<void> {
+    this.blockedNavigation = undefined;
     await this.requirePage().reload({ waitUntil: "domcontentloaded" });
+    await this.settleAndEnforceAllowlist();
   }
 
   async observe(): Promise<Observation> {
@@ -145,7 +201,9 @@ export class BrowserSurface implements Surface {
 
   async click(target: ElementTarget, timeoutMs: number): Promise<LocatorCandidate> {
     const { locator, candidate } = await this.resolve(target, timeoutMs);
+    this.blockedNavigation = undefined;
     await locator.click({ timeout: timeoutMs });
+    await this.settleAndEnforceAllowlist();
     return candidate;
   }
 
@@ -155,7 +213,9 @@ export class BrowserSurface implements Surface {
     timeoutMs: number,
   ): Promise<LocatorCandidate> {
     const { locator, candidate } = await this.resolve(target, timeoutMs);
+    this.blockedNavigation = undefined;
     await locator.fill(value, { timeout: timeoutMs });
+    await this.settleAndEnforceAllowlist();
     return candidate;
   }
 
@@ -183,6 +243,8 @@ export class BrowserSurface implements Surface {
   async captureScreenshot(evidenceDir: string, name: string): Promise<string> {
     await ensureDir(evidenceDir);
     const filePath = path.join(evidenceDir, `${name}.png`);
+    // Pixels are unredacted. Demo data is synthetic; production evidence
+    // stores screenshots in restricted storage, not in a public tree.
     await this.requirePage().screenshot({ path: filePath, fullPage: true });
     return filePath;
   }

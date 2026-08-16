@@ -11,8 +11,9 @@
     "invoke": "tsx src/cli.ts invoke",
     "operator": "tsx src/cli.ts operator",
     "checks": "tsx src/checks.ts",
+    "integration": "tsx src/integration.ts",
     "typecheck": "tsc --noEmit",
-    "test": "npm run typecheck && npm run checks"
+    "test": "npm run typecheck && npm run checks && npm run integration"
   },
   "keywords": [],
   "author": "",

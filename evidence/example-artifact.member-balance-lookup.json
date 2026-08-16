@@ -212,16 +212,20 @@
       "target": {
         "description": "Savings Balance value cell",
         "primary": {
-          "strategy": "xpath",
-          "value": "//tr[td[contains(text(), 'Savings Balance')]]/td[2]"
+          "strategy": "css",
+          "value": "#savingsBalance"
         },
         "fallbacks": [
           {
             "strategy": "xpath",
-            "value": "//td[preceding-sibling::td[contains(text(), 'Savings Balance')]]"
+            "value": "//tr[td[contains(., 'Savings Balance')]]/td[2]"
+          },
+          {
+            "strategy": "xpath",
+            "value": "//*[@id='savingsBalance']"
           }
         ],
-        "robustness": "Locates the second cell in the row containing 'Savings Balance', which works regardless of the actual balance value."
+        "robustness": "Id on the value node, with a row-label xpath fallback so a regenerated id still resolves."
       },
       "outputKey": "savingsBalance",
       "intent": "Extract the savings balance from the cell next to the 'Savings Balance' label.",

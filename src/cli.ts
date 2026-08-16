@@ -320,7 +320,8 @@ async function commandOperator(flags: Record<string, string>): Promise<number> {
           performed.push(`clicked "${name.trim()}"`);
         }
       } finally {
-        await browser.close();
+        // Do not browser.close() — this CDP connection is the live automation
+        // session. Closing it would kill the handoff target.
       }
     }
 

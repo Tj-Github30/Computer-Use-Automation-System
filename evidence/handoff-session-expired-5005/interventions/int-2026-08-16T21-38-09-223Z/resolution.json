@@ -1,0 +1,10 @@
+{
+  "interventionId": "int-2026-08-16T21-38-09-223Z",
+  "operator": "teller04",
+  "notes": "Signed back in as teller after session expiry.",
+  "action": "resume",
+  "resolvedAt": "2026-08-16T21:38:09.508Z",
+  "urlBefore": "http://127.0.0.1:62649/",
+  "urlAfter": "http://127.0.0.1:62649/",
+  "observedChange": false
+}

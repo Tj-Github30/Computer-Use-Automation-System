@@ -1,0 +1,34 @@
+- table:
+  - rowgroup:
+    - row "CoreUnion Member Servicing — Terminal 04":
+      - cell "CoreUnion Member Servicing — Terminal 04"
+    - row "Session Not signed in Login as Teller Login as Supervisor Sign out Open Core Processor Portal Member Lookup Member ID 5005 Search System Notice Session expired. Please sign in again before searching.":
+      - cell "Session Not signed in Login as Teller Login as Supervisor Sign out Open Core Processor Portal Member Lookup Member ID 5005 Search System Notice Session expired. Please sign in again before searching.":
+        - table:
+          - rowgroup:
+            - row "Session":
+              - cell "Session"
+            - row "Not signed in Login as Teller Login as Supervisor Sign out Open Core Processor Portal":
+              - cell "Not signed in Login as Teller Login as Supervisor Sign out Open Core Processor Portal":
+                - text: Not signed in
+                - button "Login as Teller"
+                - button "Login as Supervisor"
+                - button "Sign out"
+                - button "Open Core Processor Portal"
+        - table:
+          - rowgroup:
+            - row "Member Lookup":
+              - cell "Member Lookup"
+            - row "Member ID 5005 Search":
+              - cell "Member ID 5005 Search":
+                - text: Member ID
+                - textbox "Member ID":
+                  - /placeholder: e.g. 12345
+                  - text: "5005"
+                - button "Search"
+        - table:
+          - rowgroup:
+            - row "System Notice":
+              - cell "System Notice"
+            - row "Session expired. Please sign in again before searching.":
+              - cell "Session expired. Please sign in again before searching."

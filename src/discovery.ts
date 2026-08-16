@@ -5,7 +5,7 @@ import { escalateToHuman } from "./escalation.js";
 import { ensureDir, nowStamp, writeJson } from "./fs-utils.js";
 import type { DecisionModel } from "./llm.js";
 import { RunLogger } from "./logger.js";
-import { assertActionAllowed, assertUrlAllowed, classifyRisk, type PolicyConfig } from "./policy.js";
+import { assertActionAllowed, assertUrlAllowed, classifyRisk, PolicyViolationError, type PolicyConfig } from "./policy.js";
 import { Redactor } from "./redaction.js";
 import { gateRiskyStep } from "./risk-gate.js";
 import { SessionControl } from "./session-control.js";
@@ -163,6 +163,7 @@ export async function runDiscovery(options: DiscoveryOptions): Promise<Discovery
   const control = new SessionControl(logger, runId);
   const surface: Surface = new BrowserSurface({
     headless: options.headless,
+    policy: options.policy,
     scrubText: (text) => redactor.redactText(text),
     takeoverPort: options.takeoverPort,
   });
@@ -314,6 +315,7 @@ export async function runDiscovery(options: DiscoveryOptions): Promise<Discovery
               return await fail("invalid_decision", "click without a target");
             }
             await surface.click(decision.target, 10_000);
+            assertUrlAllowed(surface.currentUrl(), options.policy);
             steps.push(baseStep(stepId, decision, risk));
             break;
           }
@@ -396,6 +398,9 @@ export async function runDiscovery(options: DiscoveryOptions): Promise<Discovery
         const detail = error instanceof Error ? error.message : String(error);
         await surface.captureScreenshot(evidenceDir, `${stepId}-error`);
         await surface.captureSnapshot(evidenceDir, `${stepId}-error`);
+        if (error instanceof PolicyViolationError) {
+          return await fail("blocked_by_policy", `${stepId} (${decision.action}): ${detail}`);
+        }
         return await fail("action_failed", `${stepId} (${decision.action}): ${detail}`);
       }
     }

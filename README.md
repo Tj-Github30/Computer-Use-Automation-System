@@ -3,6 +3,8 @@
 LLM discovers a back-office flow **once**. Replay invokes it as a typed  
 capability with **no model in the loop**.
 
+**Read `REPORT.md` first** (design). This file is how to run it.
+
 The target is a local CoreUnion member-servicing terminal: table layout, no
 test IDs, runtime errors that happen in bank software, and two tenants of the
 same vendor product.
@@ -135,7 +137,7 @@ For `4004`, click `Login as Supervisor`.
 | `npm run replay`       | Same engine via `--artifact`       |
 | `npm run capabilities` | Catalogue                          |
 | `npm run operator`     | Operator console for handoff       |
-| `npm test`             | Typecheck + safety checks          |
+| `npm test`             | Typecheck, safety checks, replay integration |
 
 
 

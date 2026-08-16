@@ -33,6 +33,7 @@
                 <button id="loginBtn" type="button">Signed in as Teller</button>
                 <button id="supervisorBtn" type="button">Login as Supervisor</button>
                 <button id="signOutBtn" type="button">Sign out</button>
+                <button id="vendorPortalBtn" type="button">Open Core Processor Portal</button>
               </td>
             </tr>
           </tbody></table>
@@ -51,7 +52,7 @@
             </tr>
           </tbody></table>
 
-          <table id="resultPanel" class="pane" cellspacing="0">
+          <table id="resultPanel" class="pane hidden" cellspacing="0">
             <tbody><tr>
               <td class="pane-title">Lookup Result</td>
             </tr>
@@ -60,23 +61,23 @@
                 <table class="detail" cellspacing="0">
                   <tbody><tr>
                     <td>Member Name</td>
-                    <td><span id="memberName">Closed Estate</span></td>
+                    <td><span id="memberName"></span></td>
                   </tr>
                   <tr>
                     <td>Status</td>
-                    <td><span id="memberStatus">Closed</span></td>
+                    <td><span id="memberStatus"></span></td>
                   </tr>
                   <tr>
                     <td>Savings Balance</td>
-                    <td><span id="savingsBalance">$0.00</span></td>
+                    <td><span id="savingsBalance"></span></td>
                   </tr>
                   <tr>
                     <td>Checking Balance</td>
-                    <td><span id="checkingBalance">$0.00</span></td>
+                    <td><span id="checkingBalance"></span></td>
                   </tr>
                   <tr>
                     <td>Result Code:</td>
-                    <td><span id="resultCode">OK</span></td>
+                    <td><span id="resultCode"></span></td>
                   </tr>
                 </tbody></table>
                 <button id="openSubAccountBtn" type="button" class="hidden">Open New Sub-Account</button>
@@ -136,7 +137,7 @@
               <td class="pane-title">System Notice</td>
             </tr>
             <tr>
-              <td><span id="noticeText"></span></td>
+              <td><span id="noticeText">Session expired. Please sign in again before searching.</span></td>
             </tr>
           </tbody></table>
         </td>

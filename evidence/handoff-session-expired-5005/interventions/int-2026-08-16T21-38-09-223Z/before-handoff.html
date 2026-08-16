@@ -1,20 +1,18 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CoreUnion Member Servicing</title>
-    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
     <table class="shell" cellspacing="0">
-      <tr>
-        <td class="banner" id="banner">CoreUnion Member Servicing &mdash; Terminal 04</td>
+      <tbody><tr>
+        <td class="banner" id="banner">CoreUnion Member Servicing — Terminal 04</td>
       </tr>
       <tr>
         <td>
           <table id="interstitialPanel" class="pane hidden" cellspacing="0">
-            <tr>
+            <tbody><tr>
               <td class="pane-title">Compliance Notice</td>
             </tr>
             <tr>
@@ -23,10 +21,10 @@
                 <button id="acknowledgeBtn" type="button">Continue</button>
               </td>
             </tr>
-          </table>
+          </tbody></table>
 
           <table class="pane" cellspacing="0">
-            <tr>
+            <tbody><tr>
               <td class="pane-title">Session</td>
             </tr>
             <tr>
@@ -38,30 +36,30 @@
                 <button id="vendorPortalBtn" type="button">Open Core Processor Portal</button>
               </td>
             </tr>
-          </table>
+          </tbody></table>
 
           <table class="pane" cellspacing="0">
-            <tr>
+            <tbody><tr>
               <td class="pane-title">Member Lookup</td>
             </tr>
             <tr>
               <td>
                 <label for="memberIdInput">Member ID</label>
-                <input id="memberIdInput" type="text" placeholder="e.g. 12345" />
+                <input id="memberIdInput" type="text" placeholder="e.g. 12345" style="">
                 <button id="searchBtn" type="button">Search</button>
-                <span id="loadingState" class="hidden">Loading&hellip;</span>
+                <span id="loadingState" class="hidden">Loading…</span>
               </td>
             </tr>
-          </table>
+          </tbody></table>
 
           <table id="resultPanel" class="pane hidden" cellspacing="0">
-            <tr>
+            <tbody><tr>
               <td class="pane-title">Lookup Result</td>
             </tr>
             <tr>
               <td>
                 <table class="detail" cellspacing="0">
-                  <tr>
+                  <tbody><tr>
                     <td>Member Name</td>
                     <td><span id="memberName"></span></td>
                   </tr>
@@ -81,39 +79,39 @@
                     <td>Result Code:</td>
                     <td><span id="resultCode"></span></td>
                   </tr>
-                </table>
+                </tbody></table>
                 <button id="openSubAccountBtn" type="button" class="hidden">Open New Sub-Account</button>
               </td>
             </tr>
-          </table>
+          </tbody></table>
 
           <table id="subAccountPanel" class="pane hidden" cellspacing="0">
-            <tr>
+            <tbody><tr>
               <td class="pane-title">Open New Sub-Account</td>
             </tr>
             <tr>
               <td>
                 <div class="field-row">
                   <label for="productTypeInput">Product Type</label>
-                  <input id="productTypeInput" type="text" placeholder="Money Market, Share Certificate, or Checking" />
+                  <input id="productTypeInput" type="text" placeholder="Money Market, Share Certificate, or Checking" style="">
                 </div>
                 <div class="field-row">
                   <label for="openingAmountInput">Opening Amount</label>
-                  <input id="openingAmountInput" type="text" placeholder="e.g. 250.00" />
+                  <input id="openingAmountInput" type="text" placeholder="e.g. 250.00" style="">
                 </div>
                 <button id="submitSubAccountBtn" type="button">Submit Application</button>
               </td>
             </tr>
-          </table>
+          </tbody></table>
 
           <table id="confirmationPanel" class="pane hidden" cellspacing="0">
-            <tr>
+            <tbody><tr>
               <td class="pane-title">Confirmation</td>
             </tr>
             <tr>
               <td>
                 <table class="detail" cellspacing="0">
-                  <tr>
+                  <tbody><tr>
                     <td>Confirmation Number</td>
                     <td><span id="confirmationNumber"></span></td>
                   </tr>
@@ -129,22 +127,23 @@
                     <td>Status</td>
                     <td>Sub-account opened. Print this screen for the member file.</td>
                   </tr>
-                </table>
+                </tbody></table>
               </td>
             </tr>
-          </table>
+          </tbody></table>
 
-          <table id="noticePanel" class="pane hidden" cellspacing="0">
-            <tr>
+          <table id="noticePanel" class="pane" cellspacing="0">
+            <tbody><tr>
               <td class="pane-title">System Notice</td>
             </tr>
             <tr>
-              <td><span id="noticeText"></span></td>
+              <td><span id="noticeText">Session expired. Please sign in again before searching.</span></td>
             </tr>
-          </table>
+          </tbody></table>
         </td>
       </tr>
-    </table>
+    </tbody></table>
     <script src="/app.js"></script>
-  </body>
-</html>
+  
+
+</body></html>

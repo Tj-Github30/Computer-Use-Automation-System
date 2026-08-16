@@ -1,0 +1,25 @@
+{
+  "interventionId": "int-2026-08-16T21-38-09-223Z",
+  "sessionId": "replay-2026-08-16T21-38-07-359Z",
+  "capability": "member-balance-lookup",
+  "goal": "Sign in to the terminal, look up the member with the supplied member ID, and read their current savings balance",
+  "reason": "SESSION_EXPIRED: The terminal session ended and automation cannot re-authenticate.",
+  "conditionCode": "SESSION_EXPIRED",
+  "stepId": "step_03",
+  "stepIntent": "Click the Search button to look up the member with the entered ID.",
+  "url": "http://127.0.0.1:62649/",
+  "screenshotPath": "/Users/tejaswinisrivastava/Desktop/Coding Tests/Interface AI/evidence/replay-2026-08-16T21-38-07-359Z/interventions/int-2026-08-16T21-38-09-223Z/before-handoff.png",
+  "snapshotPaths": [
+    "/Users/tejaswinisrivastava/Desktop/Coding Tests/Interface AI/evidence/replay-2026-08-16T21-38-07-359Z/interventions/int-2026-08-16T21-38-09-223Z/before-handoff.aria.txt",
+    "/Users/tejaswinisrivastava/Desktop/Coding Tests/Interface AI/evidence/replay-2026-08-16T21-38-07-359Z/interventions/int-2026-08-16T21-38-09-223Z/before-handoff.html"
+  ],
+  "takeoverEndpoint": "http://localhost:62675",
+  "access": {
+    "actionable": true,
+    "instructions": [
+      "Attach to the same session at http://localhost:62675, or use: npm run operator -- --resolve <dir> --click \"<button>\""
+    ]
+  },
+  "requestedAt": "2026-08-16T21:38:09.255Z",
+  "status": "awaiting_operator"
+}

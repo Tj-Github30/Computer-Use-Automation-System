@@ -5,7 +5,7 @@
 import { detectCondition } from "./detectors.js";
 import { parameterize, stripSensitiveLocators } from "./discovery.js";
 import { OverrideMismatchError, resolveForTenant } from "./overrides.js";
-import { classifyRisk, defaultPolicy, assertUrlAllowed, PolicyViolationError } from "./policy.js";
+import { classifyRisk, defaultPolicy, assertUrlAllowed, urlAllowed, PolicyViolationError } from "./policy.js";
 import { Redactor } from "./redaction.js";
 import type { CapabilityArtifact, CapabilityOverride, FlowStep, Observation } from "./types.js";
 
@@ -33,14 +33,8 @@ function observation(partial: Partial<Observation>): Observation {
 
 console.log("\nAllowlist");
 {
-  check("allows an allowlisted host", (() => {
-    try {
-      assertUrlAllowed("http://localhost:3000/members", defaultPolicy);
-      return true;
-    } catch {
-      return false;
-    }
-  })());
+  check("allows an allowlisted host", urlAllowed("http://localhost:3000/members", defaultPolicy));
+  check("blocks an off-allowlist domain", !urlAllowed("https://evil.example.com/", defaultPolicy));
 
   const blocks = (url: string, policy = defaultPolicy): boolean => {
     try {

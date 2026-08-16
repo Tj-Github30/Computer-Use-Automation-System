@@ -1,4 +1,4 @@
-import { createServer } from "node:http";
+import { createServer, type Server } from "node:http";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -19,20 +19,37 @@ async function serveStatic(filePath: string): Promise<{ status: number; contentT
   return { status: 200, contentType: "text/html", body };
 }
 
-const server = createServer(async (req, res) => {
-  try {
-    const reqPath = (req.url ?? "/").split("?")[0];
-    const cleanPath = reqPath === "/" ? "/index.html" : reqPath;
-    const filePath = path.join(__dirname, "web", cleanPath);
-    const response = await serveStatic(filePath);
-    res.writeHead(response.status, { "Content-Type": response.contentType });
-    res.end(response.body);
-  } catch {
-    res.writeHead(404, { "Content-Type": "text/plain" });
-    res.end("Not found");
-  }
-});
+export function createDemoAppServer(): Server {
+  return createServer(async (req, res) => {
+    try {
+      const reqPath = (req.url ?? "/").split("?")[0];
+      const cleanPath = reqPath === "/" ? "/index.html" : reqPath;
+      const filePath = path.join(__dirname, "web", cleanPath);
+      const response = await serveStatic(filePath);
+      res.writeHead(response.status, { "Content-Type": response.contentType });
+      res.end(response.body);
+    } catch {
+      res.writeHead(404, { "Content-Type": "text/plain" });
+      res.end("Not found");
+    }
+  });
+}
 
-server.listen(PORT, () => {
-  console.log(`Demo app running at http://localhost:${PORT}`);
-});
+export async function listenDemoApp(port = PORT): Promise<Server> {
+  const server = createDemoAppServer();
+  await new Promise<void>((resolve) => {
+    server.listen(port, () => resolve());
+  });
+  return server;
+}
+
+const launchedDirectly =
+  Boolean(process.argv[1]) && path.resolve(process.argv[1]).includes(`${path.sep}demo-app${path.sep}server.`);
+
+if (launchedDirectly) {
+  listenDemoApp(PORT).then((server) => {
+    const address = server.address();
+    const port = typeof address === "object" && address ? address.port : PORT;
+    console.log(`Demo app running at http://localhost:${port}`);
+  });
+}

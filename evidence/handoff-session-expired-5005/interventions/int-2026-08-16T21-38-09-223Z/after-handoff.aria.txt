@@ -1,0 +1,28 @@
+- table:
+  - rowgroup:
+    - row "CoreUnion Member Servicing — Terminal 04":
+      - cell "CoreUnion Member Servicing — Terminal 04"
+    - row "Session Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out Open Core Processor Portal Member Lookup Member ID 5005 Search":
+      - cell "Session Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out Open Core Processor Portal Member Lookup Member ID 5005 Search":
+        - table:
+          - rowgroup:
+            - row "Session":
+              - cell "Session"
+            - row "Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out Open Core Processor Portal":
+              - cell "Signed in as teller04 (teller) Signed in as Teller Login as Supervisor Sign out Open Core Processor Portal":
+                - text: Signed in as teller04 (teller)
+                - button "Signed in as Teller"
+                - button "Login as Supervisor"
+                - button "Sign out"
+                - button "Open Core Processor Portal"
+        - table:
+          - rowgroup:
+            - row "Member Lookup":
+              - cell "Member Lookup"
+            - row "Member ID 5005 Search":
+              - cell "Member ID 5005 Search":
+                - text: Member ID
+                - textbox "Member ID":
+                  - /placeholder: e.g. 12345
+                  - text: "5005"
+                - button "Search"

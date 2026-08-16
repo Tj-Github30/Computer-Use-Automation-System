@@ -161,6 +161,7 @@ export async function runReplay(options: ReplayOptions): Promise<ReplayResult> {
 
   const surface: Surface = new BrowserSurface({
     headless: options.headless,
+    policy: options.policy,
     scrubText: (text) => redactor.redactText(text),
     takeoverPort: options.takeoverPort,
   });
@@ -322,6 +323,15 @@ export async function runReplay(options: ReplayOptions): Promise<ReplayResult> {
         control.assertAutomationMayAct();
         await performAction(step);
       } catch (error) {
+        if (error instanceof PolicyViolationError) {
+          return {
+            kind: "failure",
+            failure: {
+              classification: "policy_violation",
+              observed: error.message,
+            },
+          };
+        }
         actionError = error instanceof Error ? error : new Error(String(error));
       }
 
@@ -495,6 +505,7 @@ export async function runReplay(options: ReplayOptions): Promise<ReplayResult> {
           throw new Error(`Step ${step.id} is a click with no recorded target`);
         }
         const used = await surface.click(step.target, step.timeoutMs);
+        assertUrlAllowed(surface.currentUrl(), options.policy);
         if (used !== step.target.primary) {
           await logger.log({
             type: "locator_fallback_used",
