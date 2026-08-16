@@ -123,25 +123,6 @@ npm run operator -- --resolve "<dir>" --click "Login as Teller" --operator telle
 
 For `4004`, click `Login as Supervisor`.
 
-## Re-record (optional)
-
-```bash
-npm run discover -- --useMockLlm true --headless true --interactive false \
-  --spec capabilities/open-sub-account.spec.json \
-  --goal "Open a new sub-account for this member and reach the confirmation screen" \
-  --inputs "memberId=12345,productType=Money Market,openingAmount=250.00"
-```
-
-Live Gemini (slow; free-tier rate limits):
-
-```bash
-npm run discover -- --useMockLlm false --headless true --interactive false --timeoutMs 600000 \
-  --spec capabilities/member-balance-lookup.spec.json \
-  --goal "Look up member 12345 and read their current savings balance" \
-  --inputs "memberId=12345"
-```
-
-
 
 ## Commands
 
