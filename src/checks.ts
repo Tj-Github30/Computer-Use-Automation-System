@@ -3,6 +3,7 @@
  * write-up claims are verified rather than asserted. Run with `npm run checks`.
  */
 import { detectCondition } from "./detectors.js";
+import { accessibilityTreesDiffer } from "./escalation.js";
 import { parameterize, stripSensitiveLocators } from "./discovery.js";
 import { OverrideMismatchError, resolveForTenant } from "./overrides.js";
 import { classifyRisk, defaultPolicy, assertUrlAllowed, urlAllowed, PolicyViolationError } from "./policy.js";
@@ -52,6 +53,21 @@ console.log("\nAllowlist");
       ...defaultPolicy,
       allowedPathPrefixes: ["/members"],
     }),
+  );
+}
+
+console.log("\nHandoff page-change detection");
+{
+  const expired =
+    'Session Not signed in Login as Teller\nSystem Notice Session expired. Please sign in again before searching.';
+  const signedIn = 'Session Signed in as teller04 (teller) Signed in as Teller';
+  check(
+    "treats a same-URL login as a page change",
+    accessibilityTreesDiffer(expired, signedIn),
+  );
+  check(
+    "does not treat an unchanged accessibility tree as a page change",
+    !accessibilityTreesDiffer(signedIn, signedIn),
   );
 }
 

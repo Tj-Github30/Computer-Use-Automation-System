@@ -176,9 +176,10 @@ headless with no CDP port). Control is `automation | human`.
 
 **Takeover:** `--takeoverPort` exposes CDP. Operator attaches to **that**
 browser: `npm run operator -- --resolve … --click "Login as Teller"`. TTY
-prompts write the same `resolution.json`. Evidence:
+prompts write the same `resolution.json`, including `manualActions`. Evidence:
 `evidence/handoff-session-expired-5005/` (member `5005`, operator `teller04`,
-resume, success `$2,145.60`). Operator UI is CLI; the transfer is real.
+clicked “Login as Teller”, `pageChanged: true` at the same URL, resume, success
+`$2,145.60`). Operator UI is CLI; the transfer is real.
 
 **Hand back:** resume retries the paused step; unchanged condition is
 reported; abort ends with the operator on record.

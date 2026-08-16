@@ -9,6 +9,7 @@ import path from "node:path";
 import { chromium } from "playwright";
 import { BrowserSurface } from "./browser-surface.js";
 import { listenDemoApp } from "./demo-app/server.js";
+import type { InterventionResolution } from "./escalation.js";
 import { readJson, writeJson } from "./fs-utils.js";
 import { resolveForTenant } from "./overrides.js";
 import { defaultPolicy, PolicyViolationError } from "./policy.js";
@@ -261,6 +262,18 @@ async function main(): Promise<void> {
         "handoff resumes and completes lookup 5005",
         result.status === "success" && String(result.outputs.savingsBalance ?? "").includes("2,145.60"),
         `${result.status} ${JSON.stringify(result.outputs)}`,
+      );
+
+      const committed = await readJson<InterventionResolution>(path.join(dir, "resolution.json"));
+      check(
+        "resolution preserves structured manualActions",
+        Array.isArray(committed.manualActions) && committed.manualActions.includes('clicked "Login as Teller"'),
+        JSON.stringify(committed.manualActions),
+      );
+      check(
+        "pageChanged is true after login even when the URL did not change",
+        committed.pageChanged === true && committed.urlChanged === false,
+        `pageChanged=${String(committed.pageChanged)} urlChanged=${String(committed.urlChanged)}`,
       );
 
       if (process.env.CAPTURE_HANDOFF === "1") {

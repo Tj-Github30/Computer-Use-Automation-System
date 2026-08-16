@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
@@ -30,12 +31,39 @@ export type InterventionResolution = {
   interventionId: string;
   operator: string;
   notes: string;
+  /** Structured record of what the human did on the live session. */
+  manualActions?: string[];
   action: "resume" | "abort";
   resolvedAt: string;
   urlBefore: string;
   urlAfter: string;
-  observedChange: boolean;
+  urlChanged: boolean;
+  /** True when the accessibility tree differed across the handoff. */
+  pageChanged: boolean;
 };
+
+type OperatorReportedFields = Omit<
+  InterventionResolution,
+  "urlBefore" | "urlAfter" | "urlChanged" | "pageChanged"
+>;
+
+/** Accessibility snapshots, not URLs, are the source of truth for page change. */
+export function accessibilityTreesDiffer(before: string, after: string): boolean {
+  return before.trim() !== after.trim();
+}
+
+async function ariaSnapshotChanged(beforePaths: string[], afterPaths: string[]): Promise<boolean> {
+  const beforeAria = beforePaths.find((filePath) => filePath.endsWith(".aria.txt"));
+  const afterAria = afterPaths.find((filePath) => filePath.endsWith(".aria.txt"));
+  if (!beforeAria || !afterAria) {
+    return false;
+  }
+  const [before, after] = await Promise.all([
+    readFile(beforeAria, "utf8"),
+    readFile(afterAria, "utf8"),
+  ]);
+  return accessibilityTreesDiffer(before, after);
+}
 
 export type EscalationOptions = {
   logger: RunLogger;
@@ -139,15 +167,16 @@ export async function escalateToHuman(
     : await awaitOperatorConsole(dir, interventionId, options);
 
   const urlAfter = options.surface.currentUrl();
+  await options.surface.captureScreenshot(dir, "after-handoff");
+  const afterSnapshotPaths = await options.surface.captureSnapshot(dir, "after-handoff");
   const resolved: InterventionResolution = {
     ...resolution,
     urlBefore,
     urlAfter,
-    observedChange: urlBefore !== urlAfter,
+    urlChanged: urlBefore !== urlAfter,
+    pageChanged: await ariaSnapshotChanged(snapshotPaths, afterSnapshotPaths),
   };
 
-  await options.surface.captureScreenshot(dir, "after-handoff");
-  await options.surface.captureSnapshot(dir, "after-handoff");
   await writeJson(path.join(dir, "resolution.json"), resolved);
   await options.logger.log({ type: "intervention_resolved", resolution: resolved });
 
@@ -160,7 +189,7 @@ export async function escalateToHuman(
 async function promptOperator(
   interventionId: string,
   request: InterventionRequest,
-): Promise<Omit<InterventionResolution, "urlBefore" | "urlAfter" | "observedChange">> {
+): Promise<OperatorReportedFields> {
   const rl = createInterface({ input: stdin, output: stdout });
   stdout.write("\n=== HUMAN INTERVENTION REQUIRED ===\n");
   stdout.write(`Capability : ${request.capability}\n`);
@@ -179,13 +208,19 @@ async function promptOperator(
 
   const operator = (await rl.question("Operator id: ")).trim() || "unknown-operator";
   const notes = (await rl.question("What did you do? ")).trim();
+  const actionsLine = (await rl.question("Structured actions (optional, comma-separated): ")).trim();
   const answer = (await rl.question("Resume automation? [Y/n] ")).trim().toLowerCase();
   await rl.close();
+
+  const manualActions = actionsLine
+    ? actionsLine.split(",").map((item) => item.trim()).filter(Boolean)
+    : undefined;
 
   return {
     interventionId,
     operator,
     notes,
+    ...(manualActions && manualActions.length > 0 ? { manualActions } : {}),
     action: answer === "n" ? "abort" : "resume",
     resolvedAt: new Date().toISOString(),
   };
@@ -200,7 +235,7 @@ async function awaitOperatorConsole(
   dir: string,
   interventionId: string,
   options: EscalationOptions,
-): Promise<Omit<InterventionResolution, "urlBefore" | "urlAfter" | "observedChange">> {
+): Promise<OperatorReportedFields> {
   const signalPath = path.join(dir, "resolution.json");
   const deadline = Date.now() + options.waitTimeoutMs;
 
@@ -218,6 +253,7 @@ async function awaitOperatorConsole(
         interventionId,
         operator: signal.operator ?? "operator-console",
         notes: signal.notes ?? "",
+        ...(Array.isArray(signal.manualActions) ? { manualActions: signal.manualActions } : {}),
         action: signal.action === "abort" ? "abort" : "resume",
         resolvedAt: new Date().toISOString(),
       };

@@ -45,7 +45,7 @@ Copies also live in `artifacts/`. One live LLM discovery satisfies the brief.
 - `interventions/int-*/request.json` — reason, step, URL, takeover endpoint,
   `access.actionable`.
 - `before-handoff.png` / `.aria.txt` / `.html` and `after-handoff.*`.
-- `resolution.json` — resume, notes, operator id.
+- `resolution.json` — resume, operator id, notes, `manualActions`, `urlChanged`, `pageChanged`.
 - `success.png`.
 
 ## Automated coverage
